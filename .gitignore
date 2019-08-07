@@ -199,3 +199,10 @@ TSWLatexianTemp*
 dist/
 *.egg-info*
 htmlcov/
+
+# Eclipse
+.project
+.settings
+
+# Project specific:
+paper
