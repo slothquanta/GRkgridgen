@@ -205,4 +205,4 @@ htmlcov/
 .settings
 
 # Project specific:
-paper
+paper/data
