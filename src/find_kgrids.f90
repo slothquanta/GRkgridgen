@@ -272,13 +272,14 @@ CONTAINS
   !!<parameter name="best_offset" regular="true">The best offset from
   !!those checked for the final grid.</parameter>
   SUBROUTINE find_grid(lat_vecs, kpd, B_vecs, at, offset, find_offset, best_grid, &
-       best_offset, eps_)
+       best_offset, best_hnf, eps_)
     real(dp), intent(in) :: lat_vecs(3,3), offset(3)
     real(dp), allocatable :: B_vecs(:,:)
     integer, intent(in) :: kpd
     integer, intent(inout) :: at(:)
     real(dp), optional, intent(in) :: eps_
     real(dp), intent(out) :: best_grid(3,3), best_offset(3)
+    integer :: best_hnf(3,3)
     logical, intent(in) :: find_offset
 
     integer :: lat_id, a_kpd, c_kpd(10), i, count, mult
@@ -479,6 +480,7 @@ CONTAINS
        end do
 
        min_kpn_loc = MINLOC(ratio)
+       best_hnf = sp_hnfs(:,:, min_kpn_loc(1))
        best_grid = grids(:,:, min_kpn_loc(1))
        best_offset = grid_offsets(min_kpn_loc(1),:)
     else
