@@ -31,6 +31,7 @@ CONTAINS
     do i=1,3
        read(1,*) lattice(:,i)
     end do
+    read(1, '(a300)') line ! Follow VASP 5.x format
     read(1,'(a300)') line
     call parse_line_for_numbers(line,count,concs)
     allocate(atom_type(sum(concs)), atom_base(3,sum(concs)))

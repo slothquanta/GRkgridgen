@@ -55,8 +55,8 @@ PROGRAM lat_id_driver
   end do
   close(4)
 
-  print "(4I5)", startTime(5:8)
-  print "(4I5)", endTime(5:8)
+  !print "(4I5)", startTime(5:8)
+  !print "(4I5)", endTime(5:8)
   print "(f12.5)", exeTime
   open(10, file="hnf")
   do i = 1, 3
