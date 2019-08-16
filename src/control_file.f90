@@ -100,7 +100,7 @@ CONTAINS
 
     call matrix_inverse(transpose(lat_param*lattice),r_vecs)
     r_vecs = 2*pi*r_vecs
-    r_vol = abs(determinant(r_vecs))
+    r_vol = abs(determinant(r_vecs))    ! reciprocal cell volume
     ! ios is negative if an end of record condition is encountered or if
     ! an endfile condition was detected.  It is positive if an error was
     ! detected.  ios is zero otherwise.
@@ -123,11 +123,11 @@ CONTAINS
              nkpts_set = .True.
           case ('KPDENSITY')
              read(buffer, *, iostat=ios) kpd
-             nkpts = NINT(kpd*r_vol)
+             nkpts = NINT(kpd*r_vol)  ! round to the nearest integer number.
              nkpts_set = .True.
           case ('KSPACING')
              read(buffer, *, iostat=ios) lkpd
-             nkpts = NINT(((1.0_dp/(2*pi*lkpd))**3)*r_vol)
+             nkpts = NINT(((1.0_dp/(2*pi*lkpd))**3)*r_vol)  ! assume each k-point occupies a cubic box.
              nkpts_set = .True.
           case ('KPPRA')
              read(buffer, *, iostat=ios) kppra

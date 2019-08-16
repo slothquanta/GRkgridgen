@@ -275,6 +275,7 @@ CONTAINS
        best_offset, best_hnf, eps_)
     real(dp), intent(in) :: lat_vecs(3,3), offset(3)
     real(dp), allocatable :: B_vecs(:,:)
+    ! number of total k-points converted from all types of density specifications
     integer, intent(in) :: kpd
     integer, intent(inout) :: at(:)
     real(dp), optional, intent(in) :: eps_
@@ -283,10 +284,13 @@ CONTAINS
     logical, intent(in) :: find_offset
 
     integer :: lat_id, a_kpd, c_kpd(10), i, count, mult
+    ! temp_hnfs   : local variable to hold the hnfs for each k-point density searched.
+    ! sp_hnfs
     integer, allocatable :: sp_hnfs(:,:,:), temp_hnfs(:,:,:)
     integer, allocatable :: n_irr_kp(:), nhnfs(:), nt_kpts(:)
     real(dp), allocatable :: grids(:,:,:), ratio(:), offsets(:,:), grid_offsets(:,:)
     real(dp) :: O(3,3), Nu(3,3), No(3,3), temp_grid(3,3)
+    ! temp_hnfs   : The number of hnfs found in each search of a given k-point density.
     integer :: Cu(3,3), Co(3,3), min_kpn_loc(1), temp_nirr, temp_nhnfs, s_range
     real(dp) :: eps
     logical :: sym_check, found_min
@@ -317,7 +321,7 @@ CONTAINS
     else
        call get_offsets(lat_id, lat_vecs, eps, offsets)
     end if
-    if ((lat_id==3) .or. (lat_id==5) .or. (lat_id==1)) then
+    if ((lat_id==3) .or. (lat_id==5) .or. (lat_id==1)) then ! cubic: sc, fcc, bcc
        call get_kpd_cubic(lat_id,kpd,c_kpd)
        allocate(sp_hnfs(3,3,5), n_irr_kp(5), nhnfs(5), grids(3,3,5), nt_kpts(5))
        allocate(grid_offsets(5,3))
@@ -351,7 +355,7 @@ CONTAINS
           i = i + 1   
           deallocate(temp_hnfs)
        end do
-    else if ((lat_id==44) .or. (lat_id==31)) then
+    else if ((lat_id==44) .or. (lat_id==31)) then   ! two triclinic cells
        call get_kpd_tric(kpd, a_kpd, mult)
        allocate(sp_hnfs(3,3,1), n_irr_kp(1), nhnfs(1), grids(3,3,1), nt_kpts(1))
        allocate(grid_offsets(1,3))
@@ -365,8 +369,10 @@ CONTAINS
              a_kpd = a_kpd + 1
           end if
        end do
-       sp_hnfs = temp_hnfs*mult
-       nt_kpts(1) = a_kpd*mult
+       sp_hnfs = temp_hnfs  ! the hnf has been scaled back already in the tric_33_44 procedure!
+       nt_kpts(1) = a_kpd*mult**3 ! the mult is scale factor on all dimensions, should be cubed.
+       !sp_hnfs = temp_hnfs*mult
+       !nt_kpts(1) = a_kpd*mult
        grid_offsets(1,:) = best_offset
        count = 1
     else
@@ -557,7 +563,7 @@ CONTAINS
     tmult = 1
 
     do while (mult==0)
-       test = kpd/(tmult**3)
+       test = kpd/(tmult**3)    ! looks like the scale factor we used.
        if (test <= 100) then
           mult = tmult
           r_kpd = test

@@ -448,7 +448,7 @@ CONTAINS
     real(dp), intent(in), optional :: eps_
     real(dp), intent(out) :: O(3,3), Nu(3,3), No(3,3)
     integer, intent(out) :: Cu(3,3), Co(3,3)
-    integer, intent(out) :: id, s_range
+    integer, intent(out) :: id, s_range     ! magic number to each cell type.
 
     real(dp) :: eps
     real(dp) :: temp_a(3), temp_b(3), temp_c(3), A, B, C, D, E, F

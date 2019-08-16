@@ -276,6 +276,7 @@ CONTAINS
     real(dp), allocatable :: B_vecs(:,:)
     integer, intent(inout) :: at(:)
     integer, intent(in), allocatable :: cand_HNFs(:,:,:,:)
+    ! Only return one best HNF from the candidate sets
     integer, intent(out) :: best_HNF(3,3), n_irr
     integer, intent(in) :: ngrids(2)
 

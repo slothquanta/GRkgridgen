@@ -8,13 +8,17 @@ PROGRAM lat_id_driver
 
   implicit none
 
+  ! lat_vecs  : lattice vectors;
+  ! r_vecs    : recirpocal lattice vectors;
+  ! reduced_R : compact reciprocal lattice, i.e. Minkowski_reduced;
+  ! Rinv      : inverse of r_vecs, transform k-points from cartesian basis to the basis of r_vecs;
   real(dp) :: lat_vecs(3,3), grid(3,3), offset(3), r_vecs(3,3), reduced_R(3,3)
   real(dp) :: Rinv(3,3), point(3), eps, best_offset(3)
   logical :: find_offset
   integer :: nkpts, i, hnf(3,3)
-  integer, allocatable :: at(:)
+  integer, allocatable :: at(:)           ! atomic site types
   real(dp), pointer :: IRKps(:,:)
-  real(dp), allocatable :: B_vecs(:,:)
+  real(dp), allocatable :: B_vecs(:,:)    ! atomic positions
   integer, pointer :: weights(:)
   integer :: startTime(8), endTime(8)
   real(dp) :: exeTime, startTimeSec, endTimeSec
@@ -55,8 +59,6 @@ PROGRAM lat_id_driver
   end do
   close(4)
 
-  !print "(4I5)", startTime(5:8)
-  !print "(4I5)", endTime(5:8)
   print "(f12.5)", exeTime
   open(10, file="hnf")
   do i = 1, 3
