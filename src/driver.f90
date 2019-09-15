@@ -14,8 +14,8 @@ PROGRAM lat_id_driver
   ! Rinv      : inverse of r_vecs, transform k-points from cartesian basis to the basis of r_vecs;
   real(dp) :: lat_vecs(3,3), grid(3,3), offset(3), r_vecs(3,3), reduced_R(3,3)
   real(dp) :: Rinv(3,3), point(3), eps, best_offset(3)
-  logical :: find_offset
-  integer :: nkpts, i, hnf(3,3)
+  logical :: find_offset, min_kpts
+  integer :: nkpts, i, hnf(3,3), symm_flag
   integer, allocatable :: at(:)           ! atomic site types
   real(dp), pointer :: IRKps(:,:)
   real(dp), allocatable :: B_vecs(:,:)    ! atomic positions
@@ -24,13 +24,15 @@ PROGRAM lat_id_driver
   real(dp) :: exeTime, startTimeSec, endTimeSec
   character(10) :: date, time, zone
 
-  call get_inputs(nkpts, lat_vecs, at, B_vecs, offset, find_offset, eps)
+  call get_inputs(nkpts, lat_vecs, at, B_vecs, offset, find_offset, symm_flag, &
+       min_kpts, eps)
   call matrix_inverse(transpose(lat_vecs),r_vecs)
 
   call date_and_time(date, time, zone, startTime)
   call minkowski_reduce_basis(r_vecs, reduced_R, eps)
+
   call find_grid(lat_vecs, nkpts, B_vecs, at, offset, find_offset, grid, best_offset, hnf, &
-       eps_=eps)
+       symm_flag_=symm_flag, min_kpts_=min_kpts, eps_=eps)
   call date_and_time(date, time, zone, endTime)
 
   exeTime = 0; startTimeSec = 0; endTimeSec = 0;
@@ -43,7 +45,7 @@ PROGRAM lat_id_driver
   exeTime = endTimeSec - startTimeSec
 
   call generateIrredKpointList(lat_vecs, B_vecs, at, grid, reduced_R, best_offset, &
-       IRKps, weights, eps)
+       IRKps, weights, reps_=eps, symm_=symm_flag)
 
   call mapKptsIntoBZ(r_vecs, IRKps, eps)
 
