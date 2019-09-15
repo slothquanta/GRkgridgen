@@ -526,22 +526,17 @@ CONTAINS
           ratio(i) = real(n_irr_kp(i),dp)/real(nt_kpts(i),dp)
        end do
 
-<<<<<<< HEAD
-       min_kpn_loc = MINLOC(ratio)
-       best_hnf = sp_hnfs(:,:, min_kpn_loc(1))
-       best_grid = grids(:,:, min_kpn_loc(1))
-       best_offset = grid_offsets(min_kpn_loc(1),:)
-=======
        if ((.not. min_kpts) .and. (kpd > 500)) then
           min_kpn_loc = MINLOC(ratio)
+          best_hnf = sp_hnfs(:,:, min_kpn_loc(1))
           best_grid = grids(:,:, min_kpn_loc(1))
           best_offset = grid_offsets(min_kpn_loc(1),:)
        else
           min_kpn_loc = MINLOC(n_irr_kp, n_irr_kp > 0)
+          best_hnf = sp_hnfs(:,:, min_kpn_loc(1))
           best_grid = grids(:,:, min_kpn_loc(1))
           best_offset = grid_offsets(min_kpn_loc(1),:)
        end if
->>>>>>> 9896c6db40b7c2c716d5c345e9f649e7f4c083e3
     else
        write(*,*) "Unable to find a suitable grid within suitable range of target density."
        stop
